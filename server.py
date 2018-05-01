@@ -29,7 +29,6 @@ def user_list():
     """Show list of users."""
 
     users=User.query.all()
-    print users
     return render_template("user_list.html", users=users)
 
 @app.route('/register')
@@ -39,14 +38,26 @@ def register():
     return render_template("register_form.html")
 
 @app.route('/registration', methods=['POST'])
-def registeration():
+def registration():
     """Register user"""
 
-    email = request.form['email']
-    print email
+    user_email = request.form['email']
+    user_password = request.form['password']
 
-    # if email
+    email_query = User.query.filter_by(email=user_email).all()
 
+    if email_query:
+        return redirect("/")
+    
+    else:
+        user = User(email=user_email,
+                    password=user_password)
+
+        db.session.add(user)
+        db.session.commit()
+
+        # print "this worked"
+        
     return redirect("/")
 
 
@@ -54,6 +65,7 @@ if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
     app.debug = True
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     # make sure templates, etc. are not cached in debug mode
     app.jinja_env.auto_reload = app.debug
 
