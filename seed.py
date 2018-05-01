@@ -45,10 +45,10 @@ def load_movies():
         row = row.rstrip().split("|")
 
         movie_id = row[0]
-
         full_title = row[1].split(" ")
         full_title.pop()
         title = ' '.join(full_title)
+        #alternative solution title[:-7]
 
         released_at = datetime.strptime(row[2], "%d-%b-%Y")
 
