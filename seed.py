@@ -42,17 +42,24 @@ def load_movies():
 
     # Read u.item file and insert data
     for row in open("seed_data/u.item"):
-        row = row.rstrip()
-        movie_id, title, released_at, imdb_url = row.split("|")
+        row = row.rstrip().split("|")
+
+        movie_id = row[0]
+
+        full_title = row[1].split(" ")
+        full_title.pop()
+        title = ' '.join(full_title)
+
+        released_at = datetime.strptime(row[2], "%d-%b-%Y")
+
+        imdb_url = row[4]
 
         movie = Movie(movie_id=movie_id,
                         title=title,
                         released_at=released_at,
                         imdb_url=imdb_url)
 
-        released_at = datetime.strptime(released_at, '%d-%b-%Y')
-
-        
+        # released_at = datetime.strptime(released_at, '%d-%b-%Y')
 
         #Add movie to session
         db.session.add(movie)
@@ -65,13 +72,16 @@ def load_ratings():
     Rating.query.delete()
 
     for row in open("seed_data/u.data"):
-        row = row.rstrip()
-        user_id, movie_id, score, rating_id = row.split(" ")
+        row = row.rstrip().split("\t")
+        
+        user_id = row[0]
+        movie_id = row[1]
+        score = row[2]
+
 
         rating = Rating(user_id=user_id,
                         movie_id=movie_id,
-                        score=score,
-                        rating_id=rating_id)
+                        score=score)
         db.session.add(rating)
     db.session.commit() 
 
@@ -79,8 +89,10 @@ def load_ratings():
 def set_val_user_id():
     """Set value for the next user_id after seeding database"""
 
-    # Get the Max user_id in the database
+    # Get the Max user_id in the database, returns tuple
     result = db.session.query(func.max(User.user_id)).one()
+
+    #max_id is first item in tuple
     max_id = int(result[0])
 
     # Set the value for the next user_id to be max_id + 1
@@ -96,7 +108,7 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import different types of data
-    # load_users()
-    # load_movies()
-    # load_ratings()
-    # set_val_user_id()
+    load_users()
+    load_movies()
+    load_ratings()
+    set_val_user_id()
