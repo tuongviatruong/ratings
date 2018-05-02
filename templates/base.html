@@ -4,7 +4,16 @@
 	<title>Ratings</title>
 </head>
 <body>
-	Ratings
+	Ratings | 
+
+	{% if session %}
+		<a href='/logout'>Log Out</a> 
+	{% else %}
+		<a href='/login-form'>Log In </a> 
+	{% endif %}
+
+	<hr>
+
 	 <!-- Show flashed messages -->
   {% with messages = get_flashed_messages() %}
       {% for message in messages %}
@@ -12,8 +21,9 @@
       {% endfor %}
   {% endwith %}
 	
-	<hr>
+
 	{% block content %} put your content here {% endblock %}
 
 </body>
 </html>
+

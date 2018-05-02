@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Login Form</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
+
 	<h2>Log In</h2>
 
 	<form action="/login" method="POST">
@@ -13,5 +10,5 @@
 		<input type="submit" value="Log In">
 
 	</form>
-</body>
-</html>
+
+{% endblock %}

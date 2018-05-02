@@ -69,26 +69,48 @@ def login_form():
 def login_check():
     """Validates user info"""
 
-    session = {}
     user_email = request.form['email']
     user_password = request.form['password']
 
-    email_query = User.query.filter_by(email=user_email).one()
-    print email_query
-    print email_query.password
+
+#try & except or .first and conditional with None
+    
+    
+    email_query = User.query.filter_by(email=user_email).first()
+    
+    if email_query == None:
+        flash('Invalid email or password')
+        return redirect('/login-form')
 
     password_query = User.query.filter_by(password=user_password).all()
-    print password_query
+
 
     if user_password==email_query.password:
+
         session['user'] = email_query.user_id
         flash('You were successfully logged in')
         
         return redirect('/')
     else:
-        return 'hello'
+        flash('Invalid')
+        return redirect('/login-form')
 
+@app.route('/logout')
+def logout():
+    session.pop('user')
+    flash('You were successfully logged out')
 
+    return redirect('/')
+
+@app.route('/users/<user_id>')
+def user_info(user_id):
+    """Show user's info"""
+    user_id = User.query.filter_by(user_id=user_id).first()
+    # title = Movies.query.filter_by(title=title).all()
+    # rating = Ratings.query.filter_by(movies.rating_id=rating_id).all()
+
+    return render_template("user_info.html", user=user_id)
+    # , user= user_id, title=title, rating=rating)
 
 
 if __name__ == "__main__":
