@@ -57,8 +57,38 @@ def registration():
         db.session.commit()
 
         # print "this worked"
-        
+
     return redirect("/")
+
+@app.route('/login-form')
+def login_form():
+    """Login form"""
+    return render_template("login.html")
+
+@app.route('/login', methods=["POST"])
+def login_check():
+    """Validates user info"""
+
+    session = {}
+    user_email = request.form['email']
+    user_password = request.form['password']
+
+    email_query = User.query.filter_by(email=user_email).one()
+    print email_query
+    print email_query.password
+
+    password_query = User.query.filter_by(password=user_password).all()
+    print password_query
+
+    if user_password==email_query.password:
+        session['user'] = email_query.user_id
+        flash('You were successfully logged in')
+        
+        return redirect('/')
+    else:
+        return 'hello'
+
+
 
 
 if __name__ == "__main__":
