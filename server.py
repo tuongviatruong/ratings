@@ -118,6 +118,13 @@ def user_info(user_id):
     return render_template("user_info.html", user=user_id)
     # , user= user_id, title=title, rating=rating)
 
+@app.route('/movies')
+def display_movies():
+    """Show movies"""
+    movies = Movie.query.all()
+    print movies
+    return 'hello'
+    # return render_template("list_movies.html", movies=movies)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
