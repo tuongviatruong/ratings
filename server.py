@@ -89,8 +89,16 @@ def login_check():
 
         session['user'] = email_query.user_id
         flash('You were successfully logged in')
-        
-        return redirect('/')
+
+
+        user_id = email_query.user_id
+        # doesnt work bc user_id is not define like user_email above with request.form
+        # print user_id
+
+        # maybe connect email typed in with user id
+
+        return redirect('/users/%s' % user_id)
+
     else:
         flash('Invalid')
         return redirect('/login-form')
@@ -106,8 +114,6 @@ def logout():
 def user_info(user_id):
     """Show user's info"""
     user_id = User.query.filter_by(user_id=user_id).first()
-    # title = Movies.query.filter_by(title=title).all()
-    # rating = Ratings.query.filter_by(movies.rating_id=rating_id).all()
 
     return render_template("user_info.html", user=user_id)
     # , user= user_id, title=title, rating=rating)

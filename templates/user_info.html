@@ -7,8 +7,15 @@
     
       <li>Age: {{ user.age }}</li>
       <li>Zipcode: {{ user.zipcode}}</li>
+      <br>
+  </ul>
 
-      
+  <h3>Movie Ratings:</h3>
+  <ul>
+      {% for movie in user.ratings %}
+        <li>{{ movie.movie.title }} : {{ movie.score }}</li>
+
+      {% endfor %}
   </ul>
 
 {% endblock %}
