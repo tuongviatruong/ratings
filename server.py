@@ -6,7 +6,7 @@ from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import User, Rating, Movie, connect_to_db, db
-
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -121,10 +121,22 @@ def user_info(user_id):
 @app.route('/movies')
 def display_movies():
     """Show movies"""
-    movies = Movie.query.all()
-    print movies
-    return 'hello'
-    # return render_template("list_movies.html", movies=movies)
+    movies = Movie.query.order_by("title").all()
+
+    return render_template("list_movies.html", movies=movies)
+
+@app.route('/details/<title>')
+def movie_details(title):
+    """Detail for movie"""
+
+    movies_tuple = Movie.query.filter_by(title=title).first()
+
+    movies_date = movies_tuple.released_at
+    movies_date = movies_date.strftime("%B %d, %Y")
+
+    return render_template("movies_info.html", movie=movies_tuple, title=title, movies_date=movies_date)
+
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
